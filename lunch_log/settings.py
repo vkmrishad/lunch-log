@@ -58,6 +58,10 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_spectacular",
     # Custom apps
+    "apps.common",
+    "apps.users",
+    "apps.receipts",
+    "apps.recommendations",
 ]
 
 MIDDLEWARE = [
@@ -150,10 +154,14 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTH_USER_MODEL = "users.AppUser"
+
+
 # DRF settings
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
@@ -173,6 +181,7 @@ SPECTACULAR_SETTINGS = {
         "persistAuthorization": True,
         "displayOperationId": True,
     },
+    "SCHEMA_PATH_PREFIX": r"/api/",
     # Option for turning off error and warn messages
     "DISABLE_ERRORS_AND_WARNINGS": True,
     # include schema endpoint into schema
