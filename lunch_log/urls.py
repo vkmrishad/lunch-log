@@ -16,6 +16,7 @@ Including another URLconf
 """
 
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import (
@@ -24,10 +25,17 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/auth/", include("apps.auth.urls")),
-]
+api_v1 = "api/v1"
+
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path(f"{api_v1}/auth/", include("apps.auth.urls")),
+        path(f"{api_v1}/receipts/", include("apps.receipts.urls")),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)
 
 # Swagger
 if settings.DEBUG:

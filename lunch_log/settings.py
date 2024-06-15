@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third party apps
     "corsheaders",
+    "storages",
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
@@ -147,7 +148,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+# Media files from s3
+USE_AWS_S3 = env("USE_AWS_S3", "false") == "true"
+if USE_AWS_S3:
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -167,6 +177,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
@@ -181,7 +192,7 @@ SPECTACULAR_SETTINGS = {
         "persistAuthorization": True,
         "displayOperationId": True,
     },
-    "SCHEMA_PATH_PREFIX": r"/api/",
+    "SCHEMA_PATH_PREFIX": r"/api/v1/",
     # Option for turning off error and warn messages
     "DISABLE_ERRORS_AND_WARNINGS": True,
     # include schema endpoint into schema
@@ -195,3 +206,13 @@ SPECTACULAR_SETTINGS = {
     # Add djangorestframework-api-key annotation
     # https://github.com/tfranzel/drf-spectacular/blob/0.25.1/docs/blueprints.rst#djangorestframework-api-key
 }
+
+# AWS
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID", "minioadmin")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY", "minioadmin")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", "bucket")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", "us-east-1")
+AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL", "http://127.0.0.1:9000")
+AWS_S3_ADDRESSING_STYLE = env("AWS_S3_ADDRESSING_STYLE")
+AWS_QUERYSTRING_EXPIRE = env("AWS_QUERYSTRING_EXPIRE", 3600)
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}

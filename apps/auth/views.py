@@ -1,4 +1,5 @@
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
+from django.middleware.csrf import get_token
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
@@ -40,5 +41,40 @@ class LoginView(APIView):
         if serializer.is_valid():
             user = serializer.validated_data["user"]
             login(request, user)
-            return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+
+            # Get CSRF token
+            csrf_token = get_token(request)
+
+            # Get session ID
+            session_id = request.session.session_key
+
+            return Response(
+                {
+                    "message": "Login successful",
+                    "csrf_token": csrf_token,
+                    "session_id": session_id,
+                },
+                status=status.HTTP_200_OK,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(APIView):
+    """
+    User logout endpoint.
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        # Logout the user from session (if using session authentication)
+        logout(request)
+
+        # Logout the user from token authentication (if using token authentication)
+        try:
+            request.user.auth_token.delete()
+        except Exception:
+            pass
+
+        return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
