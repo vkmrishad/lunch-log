@@ -36,6 +36,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run Tests
         env:
+          USE_AWS_S3: true
           CORS_ALLOW_ALL_ORIGINS: true
           CORS_ALLOWED_ORIGINS: http://localhost:3000, https://localhost:3000
           DATABASE_ENGINE: django.db.backends.postgresql_psycopg2
@@ -46,6 +47,7 @@ jobs:
           AWS_BUCKET_REGION: us-east-1
           AWS_BUCKET_NAME: bucket
           AWS_S3_ENDPOINT_URL: http://127.0.0.1:5000
+          GOOGLE_PLACES_API_KEY: test_key
         run: |
           moto_server &
           pytest
