@@ -164,5 +164,4 @@ cython_debug/
 .DS_Store
 media/
 static/
-data/postgres/
-```
+data/
