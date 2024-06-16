@@ -22,6 +22,13 @@ requests = "2.32.3"
 celery = "5.4.0"
 redis = "5.0.6"
 django-celery-beat = "^2.6.0"
+pytest = "8.2.2"
+pytest-django = "4.8.0"
+moto = "5.0.9"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "lunch_log.settings"
+python_files = ["test_*.py", "*_test.py", "tests.py"]
 
 
 [build-system]

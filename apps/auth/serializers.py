@@ -45,13 +45,13 @@ class UserRegistrationSerializer(ModelSerializer):
 
 
 class UserLoginSerializer(Serializer):
-    username = CharField()
+    email = CharField()
     password = CharField(write_only=True)
 
     def validate(self, data):
-        username = data.get("username")
+        email = data.get("email")
         password = data.get("password")
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=email, password=password)
         if user and user.is_active:
             data["user"] = user
         else:
