@@ -11,6 +11,10 @@ from apps.recommendations.serializers import (
 
 
 class RecommendationView(APIView):
+    """
+    API endpoint for getting restaurant recommendations based on location information.
+    """
+
     @extend_schema(
         request=RecommendationInputSerializer,
         responses={
