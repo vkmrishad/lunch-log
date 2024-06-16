@@ -32,6 +32,7 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path(f"{api_v1}/auth/", include("apps.auth.urls")),
         path(f"{api_v1}/receipts/", include("apps.receipts.urls")),
+        path(f"{api_v1}/recommendations/", include("apps.recommendations.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
