@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,10 +11,13 @@ from apps.recommendations.serializers import (
 )
 
 
-class RecommendationView(APIView):
+class RecommendationView(APIView, PageNumberPagination):
     """
     API endpoint for getting restaurant recommendations based on location information.
     """
+
+    serializer_class = RestaurantSerializer
+    page_size = 10  # Default page size
 
     @extend_schema(
         request=RecommendationInputSerializer,
@@ -30,8 +34,11 @@ class RecommendationView(APIView):
             matching_restaurants = get_matching_restaurants(validated_data)
 
             if matching_restaurants is not None:
-                serializer = RestaurantSerializer(matching_restaurants, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                results = self.paginate_queryset(
+                    matching_restaurants, request, view=self
+                )
+                serializer = self.serializer_class(results, many=True)
+                return self.get_paginated_response(serializer.data)
             else:
                 return Response(
                     {

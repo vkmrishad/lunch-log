@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
+
 
 def env(name, default=None):
     return os.environ.get(name, default)
@@ -57,6 +59,8 @@ INSTALLED_APPS = [
     "storages",
     "rest_framework",
     "rest_framework.authtoken",
+    "django_filters",
+    "django_celery_beat",
     "drf_spectacular",
     # Custom apps
     "apps.common",
@@ -216,3 +220,20 @@ AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL", "http://127.0.0.1:9000")
 AWS_S3_ADDRESSING_STYLE = env("AWS_S3_ADDRESSING_STYLE")
 AWS_QUERYSTRING_EXPIRE = env("AWS_QUERYSTRING_EXPIRE", 3600)
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+
+# Celery
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", "redis://127.0.0.1:6379")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+# Celery Beat settings
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "fetch_restaurant_data_from_google_places": {
+        "task": "apps.recommendations.tasks.fetch_restaurant_data_from_google_places",
+        "schedule": crontab(minute="30"),  # Every 30 minutes
+    },
+}

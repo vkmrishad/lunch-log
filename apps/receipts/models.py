@@ -28,6 +28,9 @@ class Receipt(BaseModel):
     state = CharField(_("state"), max_length=100, blank=True, null=True)
     country = CharField(_("country"), max_length=100)
     postal_code = CharField(_("postal code"), max_length=20)
+    google_places_last_updated = DateTimeField(
+        _("Google Places last date updated"), blank=True, null=True
+    )
 
     def __str__(self):
         return self.restaurant_name
