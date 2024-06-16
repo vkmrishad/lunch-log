@@ -4,7 +4,7 @@ from rest_framework import routers
 from apps.receipts.views import ReceiptViewSet
 
 router = routers.DefaultRouter()
-router.register("", ReceiptViewSet)
+router.register("", ReceiptViewSet, basename="receipts")
 
 urlpatterns = [
     path("", include(router.urls)),

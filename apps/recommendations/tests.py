@@ -347,3 +347,10 @@ def test_recommendations_endpoint(
         response.data.get("error")
         == "Sorry, we don't have any recommendations for you right now."
     )
+
+    # Test unauthenticated user
+    authenticated_client.force_authenticate(user=None)
+    response = api_client.post(url, data, format="json")
+    assert (
+        response.data.get("detail") == "Authentication credentials were not provided."
+    )
