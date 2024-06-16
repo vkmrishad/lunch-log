@@ -157,12 +157,12 @@ USE_AWS_S3 = env("USE_AWS_S3", "false") == "true"
 if USE_AWS_S3:
     BACKEND = "storages.backends.s3boto3.S3Boto3Storage"
 else:
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    BACKEND = "django.core.files.storage.FileSystemStorage"
 
 # Configure storages
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": BACKEND,
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
