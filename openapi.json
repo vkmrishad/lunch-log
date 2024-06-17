@@ -1,0 +1,1040 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Lunch Log API",
+        "version": "1.0.0",
+        "description": "Office Lunch Receipt Management and Recommendation System Backend"
+    },
+    "paths": {
+        "/api/v1/auth/login/": {
+            "post": {
+                "operationId": "auth_login_create",
+                "description": "User login endpoint.\n- Used session based authentication.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserLogin"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserLogin"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserLogin"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {},
+                                    "description": "Unspecified response body"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {},
+                                    "description": "Unspecified response body"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout/": {
+            "get": {
+                "operationId": "auth_logout_retrieve",
+                "description": "User logout endpoint.",
+                "tags": [
+                    "auth"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/signup/": {
+            "post": {
+                "operationId": "auth_signup_create",
+                "description": "User registration endpoint.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegistration"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegistration"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRegistration"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRegistration"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/receipts/": {
+            "get": {
+                "operationId": "receipts_list",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "day",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filter by day"
+                    },
+                    {
+                        "in": "query",
+                        "name": "month",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filter by month, Use numbers 1-12"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "A page number within the paginated result set.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "year",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filter by year"
+                    }
+                ],
+                "tags": [
+                    "receipts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedReceiptList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "receipts_create",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "tags": [
+                    "receipts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Receipt"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/receipts/{id}/": {
+            "get": {
+                "operationId": "receipts_retrieve",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "A unique integer value identifying this receipt.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "receipts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Receipt"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "operationId": "receipts_update",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "A unique integer value identifying this receipt.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "receipts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Receipt"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Receipt"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "receipts_partial_update",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "A unique integer value identifying this receipt.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "receipts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedReceipt"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedReceipt"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedReceipt"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Receipt"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "receipts_destroy",
+                "description": "API endpoint that allows receipts to be created, viewed, updated, and deleted.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "A unique integer value identifying this receipt.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "receipts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/recommendations/": {
+            "post": {
+                "operationId": "recommendations_create",
+                "description": "API endpoint for getting restaurant recommendations based on location information.",
+                "tags": [
+                    "recommendations"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecommendationInput"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecommendationInput"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecommendationInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Restaurant"
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {},
+                                    "description": "Unspecified response body"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PaginatedReceiptList": {
+                "type": "object",
+                "required": [
+                    "count",
+                    "results"
+                ],
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri",
+                        "example": "http://api.example.org/accounts/?page=4"
+                    },
+                    "previous": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri",
+                        "example": "http://api.example.org/accounts/?page=2"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Receipt"
+                        }
+                    }
+                }
+            },
+            "PatchedReceipt": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "user": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "restaurant_name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "dated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date and time"
+                    },
+                    "price": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "street": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "city": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "state": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 100
+                    },
+                    "country": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Created time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Updated time"
+                    }
+                }
+            },
+            "Receipt": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "user": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "restaurant_name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "dated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date and time"
+                    },
+                    "price": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "street": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "city": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "state": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 100
+                    },
+                    "country": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Created time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Updated time"
+                    }
+                },
+                "required": [
+                    "city",
+                    "country",
+                    "created_at",
+                    "dated",
+                    "id",
+                    "image",
+                    "postal_code",
+                    "price",
+                    "restaurant_name",
+                    "street",
+                    "updated_at",
+                    "user"
+                ]
+            },
+            "RecommendationInput": {
+                "type": "object",
+                "properties": {
+                    "street": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Street address (e.g., 123 Main St)",
+                        "maxLength": 100
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "City name",
+                        "maxLength": 100
+                    },
+                    "state": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "State or province name (if applicable)",
+                        "maxLength": 100
+                    },
+                    "country": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Country name",
+                        "maxLength": 100
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Postal code or ZIP code",
+                        "maxLength": 20
+                    }
+                },
+                "required": [
+                    "city"
+                ]
+            },
+            "Restaurant": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Created time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "Updated time"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "google_place_name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "google_place_id": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "types": {},
+                    "national_phone_number": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "international_phone_number": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "formatted_address": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "street_number": {
+                        "type": "string",
+                        "maxLength": 10
+                    },
+                    "street": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "sublocality_level_1": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "city": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "administrative_area_level_3": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "administrative_area_level_2": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "administrative_area_level_1": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "country": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "plus_code": {},
+                    "latitude": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "viewport": {},
+                    "rating": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "google_maps_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 200
+                    },
+                    "website_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 200
+                    },
+                    "utc_offset_minutes": {
+                        "type": "integer"
+                    },
+                    "adr_formatted_address": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "business_status": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "price_level": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "user_rating_count": {
+                        "type": "integer"
+                    },
+                    "icon_mask_base_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 200
+                    },
+                    "icon_background_color": {
+                        "type": "string",
+                        "maxLength": 7
+                    },
+                    "primary_type_display_name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "takeout": {
+                        "type": "boolean"
+                    },
+                    "delivery": {
+                        "type": "boolean"
+                    },
+                    "dine_in": {
+                        "type": "boolean"
+                    },
+                    "curbside_pickup": {
+                        "type": "boolean"
+                    },
+                    "reservable": {
+                        "type": "boolean"
+                    },
+                    "serves_lunch": {
+                        "type": "boolean"
+                    },
+                    "serves_dinner": {
+                        "type": "boolean"
+                    },
+                    "serves_beer": {
+                        "type": "boolean"
+                    },
+                    "serves_wine": {
+                        "type": "boolean"
+                    },
+                    "serves_vegetarian_food": {
+                        "type": "boolean"
+                    },
+                    "primary_type": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "short_formatted_address": {
+                        "type": "string",
+                        "maxLength": 255
+                    }
+                },
+                "required": [
+                    "administrative_area_level_1",
+                    "administrative_area_level_2",
+                    "administrative_area_level_3",
+                    "adr_formatted_address",
+                    "business_status",
+                    "city",
+                    "country",
+                    "created_at",
+                    "curbside_pickup",
+                    "delivery",
+                    "dine_in",
+                    "formatted_address",
+                    "google_maps_url",
+                    "google_place_id",
+                    "google_place_name",
+                    "icon_background_color",
+                    "icon_mask_base_url",
+                    "id",
+                    "international_phone_number",
+                    "latitude",
+                    "longitude",
+                    "name",
+                    "national_phone_number",
+                    "plus_code",
+                    "postal_code",
+                    "price_level",
+                    "primary_type",
+                    "primary_type_display_name",
+                    "rating",
+                    "reservable",
+                    "serves_beer",
+                    "serves_dinner",
+                    "serves_lunch",
+                    "serves_vegetarian_food",
+                    "serves_wine",
+                    "short_formatted_address",
+                    "street",
+                    "street_number",
+                    "sublocality_level_1",
+                    "takeout",
+                    "types",
+                    "updated_at",
+                    "user_rating_count",
+                    "utc_offset_minutes",
+                    "viewport",
+                    "website_url"
+                ]
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        "pattern": "^[\\w.@+-]+$",
+                        "maxLength": 150
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email address",
+                        "maxLength": 254
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Active",
+                        "description": "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+                    },
+                    "date_joined": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "email",
+                    "id",
+                    "username"
+                ]
+            },
+            "UserLogin": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "writeOnly": true
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "UserRegistration": {
+                "type": "object",
+                "properties": {
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email address",
+                        "maxLength": 254
+                    },
+                    "password": {
+                        "type": "string",
+                        "writeOnly": true
+                    }
+                },
+                "required": [
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "password"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "sessionid"
+            },
+            "tokenAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Token-based authentication with required prefix \"Token\""
+            }
+        }
+    }
+}
