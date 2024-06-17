@@ -19,6 +19,11 @@ path = os.path.join(os.path.dirname(__file__))
 
 
 # Fixtures for setting up test data
+@pytest.fixture(autouse=True)
+def configure_settings(settings):
+    settings.USE_AWS_S3 = "false"
+
+
 @pytest.fixture
 def api_client():
     return APIClient()
@@ -66,18 +71,6 @@ def receipt(user1):
         country="Test Country",
         postal_code="12345",
     )
-
-
-# Override AWS settings for tests
-@pytest.fixture(scope="function", autouse=True)
-def override_aws_settings(settings):
-    settings.AWS_ACCESS_KEY_ID = "testing"
-    settings.AWS_SECRET_ACCESS_KEY = "testing"
-    settings.AWS_SECURITY_TOKEN = "testing"
-    settings.AWS_SESSION_TOKEN = "testing"
-    settings.AWS_BUCKET_REGION = "us-east-1"
-    settings.AWS_BUCKET_NAME = "bucket"
-    settings.AWS_S3_ENDPOINT_URL = "http://127.0.0.1:5000"
 
 
 # Set up the mock S3 environment
